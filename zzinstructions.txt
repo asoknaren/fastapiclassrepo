@@ -1,0 +1,30 @@
+
+https://docs.streamlit.io/develop/quick-reference/cheat-sheet
+
+https://pandas.pydata.org/docs/getting_started/install.html
+https://pandas.pydata.org/docs/getting_started/intro_tutorials/index.html
+https://pandas.pydata.org/docs/getting_started/index.html
+
+#-------- VIRTUAL ENVIRONMENT ------------------------
+
+py -m venv .venv
+python3 -m venv .venv
+
+-----Activate----- 
+.venv\Scripts\Activate.ps1  ------- windows
+source .venv/bin/activate   ------- mac
+
+uv sync
+
+deactivate
+
+#-------- VIRTUAL ENVIRONMENT ------------------------
+
+git remote add origin https://github.com/asoknaren/fastapiclassrepo.git
+git remote -v
+
+#-------- FastAPI RUN COMMANDS -----------------------
+
+docker build -t testwebfastapi:latest .
+
+docker run -d --name testwebfastapi-app -p 8505:8505 testwebfastapi:latest
