@@ -1,0 +1,75 @@
+
+Use this flow to push both images from your project to Azure Container Registry (ACR).  
+Your compose file defines two images/services in docker-compose.yml: bug-employee-api and bug-frontend-ui.
+
+`az` is not installed on your Mac. `zsh: command not found: az` means the Azure CLI is missing from your PATH.
+
+Install it with Homebrew:
+
+```bash
+brew update
+brew install azure-cli
+```
+
+Then verify:
+
+```bash
+az version
+```
+
+After that, sign in:
+
+```bash
+az login
+```
+
+If Homebrew is not installed, install Homebrew first:
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+Then run:
+
+```bash
+brew install azure-cli
+```
+
+===================================================================================================
+
+1. Sign in and select subscription
+   az login
+   az account set --subscription "<YOUR_SUBSCRIPTION_ID_OR_NAME>"
+
+2. Set variables
+   ACR_NAME="youracrname"        # must be globally unique, lowercase
+   RG="your-resource-group"
+   LOCATION="eastus"
+   TAG="v1"
+
+3. Create ACR (skip if already created) - use the WEB to create***
+   az group create -n $RG -l $LOCATION
+   az acr create -n $ACR_NAME -g $RG --sku Basic
+
+4. Get login server and sign in to ACR
+   ACR_LOGIN_SERVER=$(az acr show -n $ACR_NAME --query loginServer -o tsv)
+   az acr login -n $ACR_NAME
+
+5. Build and tag both images
+   docker build -f Dockerfile.bug-api -t $ACR_LOGIN_SERVER/bug-employee-api:$TAG .
+   docker build -f Dockerfile.bug-frontend -t $ACR_LOGIN_SERVER/bug-frontend-ui:$TAG .
+
+6. Push both images
+   docker push $ACR_LOGIN_SERVER/bug-employee-api:$TAG
+   docker push $ACR_LOGIN_SERVER/bug-frontend-ui:$TAG
+
+7. Verify in registry
+   az acr repository list -n $ACR_NAME -o table
+   az acr repository show-tags -n $ACR_NAME --repository bug-employee-api -o table
+   az acr repository show-tags -n $ACR_NAME --repository bug-frontend-ui -o table
+
+Alternative (no local Docker push needed): build directly in ACR
+1. az acr build -r $ACR_NAME -t bug-employee-api:$TAG -f Dockerfile.bug-api .
+2. az acr build -r $ACR_NAME -t bug-frontend-ui:$TAG -f Dockerfile.bug-frontend .
+
+

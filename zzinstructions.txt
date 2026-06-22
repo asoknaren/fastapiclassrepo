@@ -23,6 +23,9 @@ deactivate
 git remote add origin https://github.com/asoknaren/fastapiclassrepo.git
 git remote -v
 
+git remote set-url origin https://github.com/asoknaren/fastapiclassrepo.git
+git remote -v
+
 #-------- LOCAL TESTING --------------------------------
 
 # Terminal 1 – API
