@@ -6,10 +6,11 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-BASE_URL = os.getenv("API_BASE_URL", "http://127.0.0.1:8001")
+BASE_URL = os.getenv("API_BASE_URL", "http://127.0.0.1:8001").rstrip("/")
 
 st.set_page_config(page_title="Bug & Employee Manager", layout="wide")
 st.title("Bug & Employee Management")
+st.caption(f"API endpoint: {BASE_URL}")
 
 tab_employees, tab_bugs = st.tabs(["Employees", "Bugs"])
 
@@ -22,7 +23,9 @@ def api(method: str, path: str, **kwargs):
         resp = requests.request(method, BASE_URL + path, **kwargs)
         return resp
     except requests.exceptions.ConnectionError:
-        st.error("Cannot connect to API. Make sure bug_employee_api.py is running on port 8001.")
+        st.error(
+            "Cannot connect to API. Set API_BASE_URL to the bug-employee-api address and make sure the API is running."
+        )
         return None
 
 # ---------------------------------------------------------------------------

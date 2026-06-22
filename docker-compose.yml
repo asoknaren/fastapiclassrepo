@@ -1,0 +1,20 @@
+services:
+  bug-employee-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.bug-api
+    container_name: bug-employee-api
+    ports:
+      - "8001:8001"
+
+  bug-frontend-ui:
+    build:
+      context: .
+      dockerfile: Dockerfile.bug-frontend
+    container_name: bug-frontend-ui
+    depends_on:
+      - bug-employee-api
+    environment:
+      API_BASE_URL: http://bug-employee-api:8001
+    ports:
+      - "8501:8501"

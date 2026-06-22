@@ -1,0 +1,18 @@
+FROM python:3.12-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    API_BASE_URL=http://bug-employee-api:8001
+
+WORKDIR /app
+
+RUN pip install --no-cache-dir uv
+
+COPY pyproject.toml uv.lock ./
+RUN uv sync --frozen --no-dev
+
+COPY bug_frontendui.py ./
+
+EXPOSE 8501
+
+CMD ["uv", "run", "streamlit", "run", "bug_frontendui.py", "--server.address=0.0.0.0", "--server.port=8501"]
