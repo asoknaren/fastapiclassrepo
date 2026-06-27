@@ -16,6 +16,8 @@ source .venv/bin/activate   ------- mac
 
 uv sync
 
+uv add ??
+
 deactivate
 
 #-------- VIRTUAL ENVIRONMENT ------------------------
